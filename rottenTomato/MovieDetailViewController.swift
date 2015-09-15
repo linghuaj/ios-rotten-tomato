@@ -10,7 +10,8 @@ import UIKit
 
 class MovieDetailViewController: UIViewController {
     var movie: NSDictionary!
-
+    
+    @IBOutlet weak var movieNavTitle: UINavigationItem!
     @IBOutlet weak var movieDescription: UILabel!
     @IBOutlet weak var movieTitle: UILabel!
     @IBOutlet weak var movieImage: UIImageView!
@@ -18,10 +19,15 @@ class MovieDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         movieTitle.text = movie["title"] as? String
+        movieNavTitle.title = movie["title"] as? String
         movieDescription.text = movie["synopsis"]  as? String
         
         var imgUrlStr = movie.valueForKeyPath("posters.thumbnail") as! String
-//        they stopped returning URLs to the high resolution poster images. You can get around that by manually hacking the URL, as below.
+        let imgUrlOri = NSURL(string: imgUrlStr)!
+        //use low res image first
+        movieImage.setImageWithURL(imgUrlOri)
+        
+        //        they stopped returning URLs to the high resolution poster images. You can get around that by manually hacking the URL, as below.
         var range = imgUrlStr.rangeOfString(".*cloudfront.net/", options: .RegularExpressionSearch)
         if let range = range {
             imgUrlStr = imgUrlStr.stringByReplacingCharactersInRange(range, withString: "https://content6.flixster.com/")
@@ -29,15 +35,15 @@ class MovieDetailViewController: UIViewController {
         let imgUrl = NSURL(string: imgUrlStr)!
         movieImage.setImageWithURL(imgUrl)
     }
-
+    
     /*
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // Get the new view controller using segue.destinationViewController.
+    // Pass the selected object to the new view controller.
     }
     */
-
+    
 }
