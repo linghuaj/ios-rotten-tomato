@@ -8,18 +8,18 @@
 
 import UIKit
 private let CELL_NAME = "com.codepath.rottenTomato.movieCell"
-private let API_ROOT = "http://localhost:8000/"
+private let API_ROOT = "https://gist.githubusercontent.com/timothy1ee/e41513a57049e21bc6cf/raw/b490e79be2d21818f28614ec933d5d8f467f0a66/gistfile1.json"
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var movies:NSArray?
-//    create the UIRefreshControl as an instance variable at the top of the class because you need to access it to stop the loading behavior.
+    //  create the UIRefreshControl as an instance variable at the top of the class because you need to access it to stop the loading behavior. http://courses.codepath.com/courses/ios_for_designers/pages/using_uirefreshcontrol
     var refreshControl: UIRefreshControl!
     
     //movieList is the uitable outlet
     @IBOutlet weak var movieList: UITableView!
     
     func makeRequest(closure:()->()){
-         //TODO: switch with remote uri
+        //TODO: switch with remote uri
         let request = NSMutableURLRequest(URL: NSURL(string:API_ROOT)!)
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request){
             (data, response, error) -> Void in
@@ -42,30 +42,30 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         //otherwise didSelectRowAtIndexPath won't work
         movieList.delegate = self
         makeRequest({});
-       
-//        add the refresh control as a subview of the scrollview. It's best to insert it at the lowest index so that it appears behind all the views in the scrollview. 
+        
+        //  add the refresh control as a subview of the scrollview. It's best to insert it at the lowest index so that it appears behind all the views in the scrollview.
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
-         movieList.insertSubview(refreshControl, atIndex: 0)
+        movieList.insertSubview(refreshControl, atIndex: 0)
     }
-// DO NOT DELETE
-// REFERENCE FOR swift closure
-//    func delay(delay:Double, closure:()->()) {
-//        dispatch_after(
-//            dispatch_time(
-//                DISPATCH_TIME_NOW,
-//                Int64(delay * Double(NSEC_PER_SEC))
-//            ),
-//            dispatch_get_main_queue(), closure)
-//    }
+    // DO NOT DELETE
+    // REFERENCE FOR swift closure
+    //    func delay(delay:Double, closure:()->()) {
+    //        dispatch_after(
+    //            dispatch_time(
+    //                DISPATCH_TIME_NOW,
+    //                Int64(delay * Double(NSEC_PER_SEC))
+    //            ),
+    //            dispatch_get_main_queue(), closure)
+    //    }
     
     func onRefresh() {
-         makeRequest({
+        makeRequest({
             self.refreshControl.endRefreshing()
-         });
-//        delay(2, closure: {
-//            self.refreshControl.endRefreshing()
-//        })
+        });
+        //        delay(2, closure: {
+        //            self.refreshControl.endRefreshing()
+        //        })
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -79,6 +79,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let movie = self.movies![indexPath.row] as! NSDictionary
         cell.movieTitle.text = movie["title"] as? String
         cell.movieDescription.text = movie["synopsis"] as? String
+        //grab image url
+        let imgUrl = NSURL(string: movie.valueForKeyPath("posters.thumbnail") as! String)!
+        cell.movieImage.setImageWithURL(imgUrl)
         return cell;
     }
     

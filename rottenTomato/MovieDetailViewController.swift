@@ -19,8 +19,15 @@ class MovieDetailViewController: UIViewController {
         super.viewDidLoad()
         movieTitle.text = movie["title"] as? String
         movieDescription.text = movie["synopsis"]  as? String
-     
-        // Do any additional setup after loading the view.
+        
+        var imgUrlStr = movie.valueForKeyPath("posters.thumbnail") as! String
+//        they stopped returning URLs to the high resolution poster images. You can get around that by manually hacking the URL, as below.
+        var range = imgUrlStr.rangeOfString(".*cloudfront.net/", options: .RegularExpressionSearch)
+        if let range = range {
+            imgUrlStr = imgUrlStr.stringByReplacingCharactersInRange(range, withString: "https://content6.flixster.com/")
+        }
+        let imgUrl = NSURL(string: imgUrlStr)!
+        movieImage.setImageWithURL(imgUrl)
     }
 
     /*
