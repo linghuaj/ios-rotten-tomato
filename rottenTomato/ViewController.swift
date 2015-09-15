@@ -15,16 +15,35 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     //  create the UIRefreshControl as an instance variable at the top of the class because you need to access it to stop the loading behavior. http://courses.codepath.com/courses/ios_for_designers/pages/using_uirefreshcontrol
     var refreshControl: UIRefreshControl!
     
+    @IBOutlet weak var networkErrBg: UIView!
+    
     //movieList is the uitable outlet
     @IBOutlet weak var movieList: UITableView!
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
     func makeRequest(closure:()->()){
+        //every request hide the network error notification
+        self.networkErrBg.hidden = true;
         //TODO: switch with remote uri
         let request = NSMutableURLRequest(URL: NSURL(string:API_ROOT)!)
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request){
             (data, response, error) -> Void in
+            
+            if ((error) != nil){
+                //if there is network error, show it up
+                dispatch_async(dispatch_get_main_queue()){
+                    self.networkErrBg.hidden = false;
+                    self.activityIndicator.hidden = true
+                }
+                
+                return
+            }
             let dictionary = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as? NSDictionary
+            //if successful show movie list container
+            self.movieList.hidden = false
             dispatch_async(dispatch_get_main_queue()) {
+                self.activityIndicator.hidden = true
                 //need to check if dictionary exist! otherwise the following statement won't pass compile
                 if let dictionary = dictionary {
                     self.movies = dictionary["movies"] as? NSArray
@@ -33,6 +52,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 NSLog("request complete, dispatch to the main queue")
                 closure()
             }
+            
         }
         task.resume()
     }
@@ -42,6 +62,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         //otherwise didSelectRowAtIndexPath won't work
         movieList.delegate = self
         makeRequest({});
+        //networkErrBg.hidden = true;
         
         //  add the refresh control as a subview of the scrollview. It's best to insert it at the lowest index so that it appears behind all the views in the scrollview.
         refreshControl = UIRefreshControl()
