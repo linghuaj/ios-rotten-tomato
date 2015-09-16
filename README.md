@@ -34,35 +34,35 @@ Time spent: `<Number of hours spent>`
 
 ##TODO:
 
-##Notes:s
+##Notes:
 ### cache policy
 ```
-   let request = NSURLRequest(URL: NSURL(string:currentAPI)!, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval:5)
+let request = NSURLRequest(URL: NSURL(string:currentAPI)!, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval:5)
 ```
 
-###UIRefreshControl
+### UIRefreshControl
 Pull Down to refresh the
 http://courses.codepath.com/courses/ios_for_designers/pages/using_uirefreshcontrol
 create the UIRefreshControl as an instance variable at the top of the class because you need to access it to stop the loading behavior. 
 
 ```
-    override func viewDidLoad() {
-        //  add the refresh control as a subview of the scrollview. It's best to insert it at the lowest index so that it appears behind all the views in the scrollview.
-        refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
-        movieList.insertSubview(refreshControl, atIndex: 0)
-    }
+override func viewDidLoad() {
+    //  add the refresh control as a subview of the scrollview. It's best to insert it at the lowest index so that it appears behind all the views in the scrollview.
+    refreshControl = UIRefreshControl()
+    refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+    movieList.insertSubview(refreshControl, atIndex: 0)
+}
 
-    func onRefresh() {
-        //get current selected tag
-        makeRequest(){
-            self.refreshControl.endRefreshing()
-        };
-    }
+func onRefresh() {
+    //get current selected tag
+    makeRequest(){
+        self.refreshControl.endRefreshing()
+    };
+}
 
 ```
 
-##tabBar
+### tabBar
 - add tab bar to the bottom
 
 ```
