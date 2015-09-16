@@ -24,7 +24,7 @@ This is a movies app displaying box office and top rental DVDs using the [Rotten
 - [x] Add a search bar: pretty simple implementation of searching against the existing table view data.
 
 ### Walkthrough
-![Video Walkthrough](http://i.imgur.com/9d4fXIm.gif)
+![Video Walkthrough](https://github.com/linghuaj/rotten-tomato/blob/master/rotten_tomato.gif)
 
 ### Steps:
 - git clone https://github.com/linghuaj/rotten-tomato.git
