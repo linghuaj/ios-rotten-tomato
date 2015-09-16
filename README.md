@@ -79,6 +79,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 	    	makeRequest(){}
 	    }
 	}
+}
 ```
 
 
