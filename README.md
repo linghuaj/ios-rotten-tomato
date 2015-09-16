@@ -32,8 +32,6 @@ This is a movies app displaying box office and top rental DVDs using the [Rotten
 - open rottenTomato.xcworkspace
 - run simulator
 
-###TODO:
-
 ###Notes:
 #### cache policy
 ```
@@ -116,7 +114,7 @@ func onRefresh() {
 
 
 
-Credits
+### Credits
 ---------
 * [Rotten Tomatoes API](http://developer.rottentomatoes.com/docs/read/JSON)
 * [AFNetworking](https://github.com/AFNetworking/AFNetworking)
