@@ -2,7 +2,6 @@
 
 This is a movies app displaying box office and top rental DVDs using the [Rotten Tomatoes API](http://developer.rottentomatoes.com/docs/read/JSON).
 
-Time spent: `<Number of hours spent>`
 
 ### Features
 
@@ -27,21 +26,22 @@ Time spent: `<Number of hours spent>`
 ### Walkthrough
 ![Video Walkthrough](http://i.imgur.com/9d4fXIm.gif)
 
-##steps:
+### Steps:
+- git clone https://github.com/linghuaj/rotten-tomato.git
 - pod install
 - open rottenTomato.xcworkspace
 - run simulator
 
-##TODO:
+###TODO:
 
-##Notes:
-### cache policy
+###Notes:
+#### cache policy
 ```
 let request = NSURLRequest(URL: NSURL(string:currentAPI)!, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval:5)
 ```
 
-### UIRefreshControl
-Pull Down to refresh the
+#### Pull to refresh (UIRefreshControl)
+Pull Down to refresh the table view
 http://courses.codepath.com/courses/ios_for_designers/pages/using_uirefreshcontrol
 create the UIRefreshControl as an instance variable at the top of the class because you need to access it to stop the loading behavior. 
 
@@ -62,7 +62,7 @@ func onRefresh() {
 
 ```
 
-### tabBar
+#### tabBar
 - add tab bar to the bottom
 
 ```
@@ -81,6 +81,39 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 	}
 }
 ```
+
+#### simulate network loading
+simulate network loading by canceling refreshing after a couple of seconds.
+``` 
+func delay(delay:Double, closure:()->()) {
+    dispatch_after(
+        dispatch_time(
+            DISPATCH_TIME_NOW,
+            Int64(delay * Double(NSEC_PER_SEC))
+        ),
+        dispatch_get_main_queue(), closure)
+}
+
+func onRefresh() {
+    delay(2, closure: {
+        self.refreshControl.endRefreshing()
+    })
+}
+```
+
+### install pods
+- pod init
+- vi podfile https://github.com/linghuaj/rotten-tomato/blob/master/Podfile
+- open open rottenTomato.xcworkspace !!
+- create a empty objective C file named 'dummy' to create a header file 
+- delete the dummy file
+- edit the header file to add in 
+
+```
+//with the import extension to class as UIImageView, the extension will be available after import
+#import "UIImageView+AFNetworking.h"
+```
+
 
 
 Credits
