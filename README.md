@@ -18,7 +18,7 @@ Time spent: `<Number of hours spent>`
 
 - [ ] All images fade in.
 - [x] For the larger poster, load the low-res first and switch to high-res when complete.
-- [ ] All images should be cached in memory and disk: AppDelegate has an instance of `NSURLCache` and `NSURLRequest` makes a request with `NSURLRequestReturnCacheDataElseLoad` cache policy. I tested it by turning off wifi and restarting the app.
+- [x] All images should be cached in memory and disk: AppDelegate has an instance of `NSURLCache` and `NSURLRequest` makes a request with `ReturnCacheDataElseLoad` cache policy. I tested it by turning off wifi and restarting the app.
 - [x] Customize the highlight and selection effect of the cell.
 - [x] Customize the navigation bar.
 - [x] Add a tab bar for Box Office and DVD.
@@ -33,7 +33,54 @@ Time spent: `<Number of hours spent>`
 - run simulator
 
 ##TODO:
-- view container/scrollview should fit the size of the movie description content
+
+##Notes:s
+### cache policy
+```
+   let request = NSURLRequest(URL: NSURL(string:currentAPI)!, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval:5)
+```
+
+###UIRefreshControl
+Pull Down to refresh the
+http://courses.codepath.com/courses/ios_for_designers/pages/using_uirefreshcontrol
+create the UIRefreshControl as an instance variable at the top of the class because you need to access it to stop the loading behavior. 
+
+```
+    override func viewDidLoad() {
+        //  add the refresh control as a subview of the scrollview. It's best to insert it at the lowest index so that it appears behind all the views in the scrollview.
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        movieList.insertSubview(refreshControl, atIndex: 0)
+    }
+
+    func onRefresh() {
+        //get current selected tag
+        makeRequest(){
+            self.refreshControl.endRefreshing()
+        };
+    }
+
+```
+
+##tabBar
+- add tab bar to the bottom
+
+```
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate {
+	override func viewDidLoad() {
+    	tabBar.delegate = self
+	}
+
+	func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem!) {
+		if item.tag != tabBar.selectedItem?.tag {
+	    	return
+	    }
+	    //detecting current tab is handled in making request. because onRefresh needs to do the same thing
+	    	makeRequest(){}
+	    }
+	}
+```
+
 
 Credits
 ---------

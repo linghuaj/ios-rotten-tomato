@@ -49,6 +49,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         movieList.insertSubview(refreshControl, atIndex: 0)
+        
+        //hide movieList at beginning
         movieList.hidden = true
     }
     
@@ -120,7 +122,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         //every request hide the network error notification
         self.networkErrBg.hidden = true;
         //making request
-        let request = NSMutableURLRequest(URL: NSURL(string:currentAPI)!)
+        // let request = NSURLRequest(URL: NSURL(string:currentAPI)! )
+        let request = NSURLRequest(URL: NSURL(string:currentAPI)!, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval:5)
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request){
             (data, response, error) -> Void in
             if (error) != nil {
@@ -129,7 +132,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     self.networkErrBg.hidden = false;
                     self.activityIndicator.hidden = true
                 }
-                return
+                //return
             }
             let dictionary = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as? NSDictionary
             dispatch_async(dispatch_get_main_queue()) {
