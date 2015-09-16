@@ -3,8 +3,7 @@
 //  rottenTomato
 //
 //  Created by Linghua Jin on 9/13/15.
-//  Copyright (c) 2015 Linghua Jin. All rights reserved.
-//
+
 
 import UIKit
 

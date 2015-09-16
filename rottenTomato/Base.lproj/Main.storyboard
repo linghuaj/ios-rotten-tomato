@@ -23,7 +23,7 @@
                                     <textInputTraits key="textInputTraits" keyboardAppearance="alert"/>
                                 </searchBar>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="com.codepath.rottenTomato.movieCell" rowHeight="102" id="edz-Ft-Djh" customClass="MovieCell" customModule="rottenTomato" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="com.ljin.rottenTomato.movieCell" rowHeight="102" id="edz-Ft-Djh" customClass="MovieCell" customModule="rottenTomato" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="130" width="320" height="102"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="edz-Ft-Djh" id="Hmh-To-ymI">
