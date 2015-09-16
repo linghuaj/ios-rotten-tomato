@@ -15,7 +15,7 @@ This is a movies app displaying box office and top rental DVDs using the [Rotten
 
 #### Optional
 
-- [ ] All images fade in.
+- [x] All images fade in.
 - [x] For the larger poster, load the low-res first and switch to high-res when complete.
 - [x] All images should be cached in memory and disk: AppDelegate has an instance of `NSURLCache` and `NSURLRequest` makes a request with `ReturnCacheDataElseLoad` cache policy. I tested it by turning off wifi and restarting the app.
 - [x] Customize the highlight and selection effect of the cell.
@@ -113,6 +113,18 @@ func onRefresh() {
 #import "UIImageView+AFNetworking.h"
 ```
 
+### scroll for contents
+- add scrollview
+- drag contents-view under scroll view
+- (use textview if to fit a longtext with scrolling and vertical top align)
+
+```
+override func viewDidLoad() {
+    //enable scroller
+    scroller.scrollEnabled = true;
+    scroller.contentSize = CGSizeMake(320, 624);
+}
+```
 
 
 ### Credits

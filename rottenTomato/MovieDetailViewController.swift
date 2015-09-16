@@ -19,19 +19,32 @@ class MovieDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //initialize with the movie passed from movies view controller
+        movieImage.alpha = 0.5
         movieTitle.text = movie["title"] as? String
         movieNavTitle.title = movie["title"] as? String
-        
-        
-           desc.text = movie["synopsis"]  as? String
+        desc.text = movie["synopsis"]  as? String
         pgTag.text = movie["mpaa_rating"]  as? String
         
+        //enable scroller
+        scroller.scrollEnabled = true;
+        scroller.contentSize = CGSizeMake(320, 624);
+        
+        self.loadMovieImage()
+    }
+    
+    /**
+     * load low res image first
+     * when high res available it overrides the low res image
+     * set up image fadein
+    */
+    func loadMovieImage(){
+        //use low res image first
         var imgUrlStr = movie.valueForKeyPath("posters.thumbnail") as! String
         let imgUrlOri = NSURL(string: imgUrlStr)!
-        //use low res image first
         movieImage.setImageWithURL(imgUrlOri)
         
-        //        they stopped returning URLs to the high resolution poster images. You can get around that by manually hacking the URL, as below.
+        //load high res image, API stopped returning URLs to the high resolution poster images. get around by manually hacking the URL.
         var range = imgUrlStr.rangeOfString(".*cloudfront.net/", options: .RegularExpressionSearch)
         if let range = range {
             imgUrlStr = imgUrlStr.stringByReplacingCharactersInRange(range, withString: "https://content6.flixster.com/")
@@ -39,20 +52,11 @@ class MovieDetailViewController: UIViewController {
         let imgUrlHighRes = NSURL(string: imgUrlStr)!
         movieImage.setImageWithURL(imgUrlHighRes)
         
-        //enable scroller
-        //TODO: view container/scrollview should fit the size of the movie description content
-        scroller.scrollEnabled = true;
-        scroller.contentSize = CGSizeMake(320, 624);
+        //fadein the image
+        //TODO: place animiation into shared utils
+        UIView.animateWithDuration(0.5, delay: 0.5, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+            self.movieImage.alpha = 1.0
+            }, completion: nil)
     }
-    
-    /*
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using segue.destinationViewController.
-    // Pass the selected object to the new view controller.
-    }
-    */
     
 }

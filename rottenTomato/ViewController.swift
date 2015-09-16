@@ -14,8 +14,7 @@ private let API_DVD = "https://gist.githubusercontent.com/timothy1ee/e41513a5704
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UISearchBarDelegate {
     var movies:NSArray?
-    //store the filtered data
-    var filtered:NSArray?
+    var filtered:NSArray? //store the filtered data
     //if user doing search, table view loads from filtered. otherwise from movies
     var searchActive : Bool = false
     var refreshControl: UIRefreshControl!
@@ -28,7 +27,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        //set up events delegate
         //otherwise didSelectRowAtIndexPath won't work
         movieList.delegate = self
         tabBar.delegate = self
@@ -37,18 +36,25 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         //default the first tab to be selected
         tabBar.selectedItem = tabBar.items?.first as? UITabBarItem
         
+        //hide movieList at beginning
+        movieList.hidden = true
+        
         //only make request if search bar has no item inside (when user come back from movie detail)
         if !searchActive {
             makeRequest(){};
         }
         
-        //  add the refresh control as a subview of the scrollview. It's best to insert it at the lowest index so that it appears behind all the views in the scrollview.
+        self.initPullToRefresh()
+    }
+    
+    /**
+     * add the refresh control as a subview of the scrollview.
+     * It's best to insert it at the lowest index so that it appears behind all the views in the scrollview.
+     */
+    func initPullToRefresh(){
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         movieList.insertSubview(refreshControl, atIndex: 0)
-        
-        //hide movieList at beginning
-        movieList.hidden = true
     }
     
     
@@ -56,7 +62,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if item.tag != tabBar.selectedItem?.tag {
             return
         }
-        //detecting current tab is handled in making request. because onRefresh needs to do the same thing
+        //if a new tab is clicked, refetch
         makeRequest(){}
     }
     
@@ -66,10 +72,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             filtered = movies
             searchActive = false;
         }else{
-        
-          let resultPredicate = NSPredicate(format: "title contains[c] %@", searchText)
-          filtered = movies!.filteredArrayUsingPredicate(resultPredicate)
-          searchActive = true;
+            
+            let resultPredicate = NSPredicate(format: "title contains[c] %@", searchText)
+            filtered = movies!.filteredArrayUsingPredicate(resultPredicate)
+            searchActive = true;
         }
         movieList.reloadData()
     }
@@ -93,9 +99,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let movie = self.filtered![indexPath.row] as! NSDictionary
         cell.movieTitle.text = movie["title"] as? String
         cell.movieDescription.text = movie["synopsis"] as? String
+        cell.movieImage.alpha = 0.2
         //grab image url
         let imgUrl = NSURL(string: movie.valueForKeyPath("posters.thumbnail") as! String)!
         cell.movieImage.setImageWithURL(imgUrl)
+        
+        //fadein the high res image
+        UIView.animateWithDuration(0.5, delay: 0.5, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+            cell.movieImage.alpha = 1.0
+            }, completion: nil)
         return cell;
     }
     
@@ -129,14 +141,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     self.networkErrBg.hidden = false;
                     self.activityIndicator.hidden = true
                 }
-                //return
             }
+            //even if there is network error, the following line would load the data from cache and show some data
             let dictionary = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as? NSDictionary
             dispatch_async(dispatch_get_main_queue()) {
                 //if successful show movie list container
                 self.movieList.hidden = false
                 self.activityIndicator.hidden = true
-                //need to check if dictionary exist! otherwise the following statement won't pass compile
+                //need to check if dictionary exist! otherwise the following won't pass compile
                 if let dictionary = dictionary {
                     self.movies = dictionary["movies"] as? NSArray
                     self.filtered = dictionary["movies"] as? NSArray
@@ -149,20 +161,26 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         task.resume()
     }
     
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    /**
+     * do a little preparation before navigation
+     * pass movie object from this view controller to detail view controller
+     */
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
         let cell = sender as! UITableViewCell
         let indexPath = movieList.indexPathForCell(cell)!
         let movie = filtered![indexPath.row] as! NSDictionary
         let transitionToController = segue.destinationViewController as! MovieDetailViewController
+        // Pass the selected object to the new view controller.
         transitionToController.movie = movie
         view.endEditing(true)
     }
     
-    //when tap anywhere on the screen, cancel the number pad triggered by input
-    //this is deprecating the events for push navigation if i add the tapgesture reference outlet connection to view
+    /**
+     * when tap anywhere on the screen, cancel the number pad triggered by input
+     * TODO: come up with a better approach
+     * ? this is deprecating the events for push navigation if i add the tapgesture reference outlet connection to view
+     */
     @IBAction func onTapAnywhere(sender: UITapGestureRecognizer) {
         NSLog("onTap")
         //view.endEditing(true)
