@@ -102,6 +102,7 @@ func onRefresh() {
 ### install pods
 - pod init
 - vi podfile https://github.com/linghuaj/rotten-tomato/blob/master/Podfile
+- pod install
 - open open rottenTomato.xcworkspace !!
 - create a empty objective C file named 'dummy' to create a header file 
 - delete the dummy file
