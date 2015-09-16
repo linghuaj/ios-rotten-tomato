@@ -3,7 +3,7 @@
 //  rottenTomato
 //
 //  Created by Linghua Jin on 9/13/15.
-//  Copyright (c) 2015 codepath. All rights reserved.
+//  Copyright (c) 2015 Linghua Jin. All rights reserved.
 //
 
 import UIKit
@@ -12,15 +12,20 @@ class MovieDetailViewController: UIViewController {
     var movie: NSDictionary!
     
     @IBOutlet weak var movieNavTitle: UINavigationItem!
-    @IBOutlet weak var movieDescription: UILabel!
     @IBOutlet weak var movieTitle: UILabel!
     @IBOutlet weak var movieImage: UIImageView!
+    @IBOutlet weak var pgTag: UILabel!
+    @IBOutlet weak var desc: UITextView!
+    @IBOutlet weak var scroller: UIScrollView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         movieTitle.text = movie["title"] as? String
         movieNavTitle.title = movie["title"] as? String
-        movieDescription.text = movie["synopsis"]  as? String
+        
+        
+           desc.text = movie["synopsis"]  as? String
+        pgTag.text = movie["mpaa_rating"]  as? String
         
         var imgUrlStr = movie.valueForKeyPath("posters.thumbnail") as! String
         let imgUrlOri = NSURL(string: imgUrlStr)!
@@ -32,8 +37,13 @@ class MovieDetailViewController: UIViewController {
         if let range = range {
             imgUrlStr = imgUrlStr.stringByReplacingCharactersInRange(range, withString: "https://content6.flixster.com/")
         }
-        let imgUrl = NSURL(string: imgUrlStr)!
-        movieImage.setImageWithURL(imgUrl)
+        let imgUrlHighRes = NSURL(string: imgUrlStr)!
+        movieImage.setImageWithURL(imgUrlHighRes)
+        
+        //enable scroller
+        //TODO: view container/scrollview should fit the size of the movie description content
+        scroller.scrollEnabled = true;
+        scroller.contentSize = CGSizeMake(320, 624);
     }
     
     /*

@@ -22,10 +22,18 @@ Time spent: `<Number of hours spent>`
 - [x] Customize the highlight and selection effect of the cell.
 - [x] Customize the navigation bar.
 - [x] Add a tab bar for Box Office and DVD.
-- [ ] Add a search bar: pretty simple implementation of searching against the existing table view data.
+- [x] Add a search bar: pretty simple implementation of searching against the existing table view data.
 
 ### Walkthrough
 ![Video Walkthrough](http://i.imgur.com/9d4fXIm.gif)
+
+##steps:
+- pod install
+- open rottenTomato.xcworkspace
+- run simulator
+
+##TODO:
+- view container/scrollview should fit the size of the movie description content
 
 Credits
 ---------
