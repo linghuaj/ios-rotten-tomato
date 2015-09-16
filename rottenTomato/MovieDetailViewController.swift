@@ -53,7 +53,6 @@ class MovieDetailViewController: UIViewController {
         movieImage.setImageWithURL(imgUrlHighRes)
         
         //fadein the image
-        //TODO: place animiation into shared utils
         UIView.animateWithDuration(0.5, delay: 0.5, options: UIViewAnimationOptions.CurveEaseOut, animations: {
             self.movieImage.alpha = 1.0
             }, completion: nil)
